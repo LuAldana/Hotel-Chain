@@ -11,7 +11,6 @@ import java.util.List;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface RoomMapper extends GenericMapperOut<RoomEntity, RoomContract> {
     @Override
-    @Mapping(target = "id", ignore = true)
     @Mapping(target = "roomTypeEntity", ignore = true)
     @Mapping(target = "hotelSiteEntity", ignore = true)
     RoomEntity loadEntityOut(RoomContract contractOut);

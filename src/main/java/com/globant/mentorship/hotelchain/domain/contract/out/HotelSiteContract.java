@@ -1,5 +1,6 @@
 package com.globant.mentorship.hotelchain.domain.contract.out;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,6 +13,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class HotelSiteContract {
 
+    @JsonIgnore
+    private Long id;
     @NotEmpty(message = "Neighborhood mustn't be null or empty")
     private String neighborhood;
     @NotEmpty(message = "Address mustn't be null or empty")

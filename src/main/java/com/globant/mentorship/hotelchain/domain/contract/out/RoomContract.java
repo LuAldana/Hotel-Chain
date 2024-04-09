@@ -1,5 +1,6 @@
 package com.globant.mentorship.hotelchain.domain.contract.out;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,6 +13,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class RoomContract {
 
+    @JsonIgnore
+    private Long id;
     @NotNull(message = "Number room can't be null or empty")
     @Positive(message = "Number room must be greater than zero")
     private int number;

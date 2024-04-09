@@ -1,6 +1,7 @@
 package com.globant.mentorship.hotelchain.service;
 
 import com.globant.mentorship.hotelchain.domain.contract.out.RoomContract;
+import com.globant.mentorship.hotelchain.domain.contract.out.RoomTypeContract;
 import com.globant.mentorship.hotelchain.domain.entity.RoomEntity;
 
 import java.util.Map;
@@ -14,4 +15,6 @@ public interface IRoomService {
     boolean validateIfRoomAlreadyExists(RoomContract roomContract);
 
     RoomEntity getRoom(int number);
+
+    RoomTypeContract getRoomTypeMostBooked();
 }

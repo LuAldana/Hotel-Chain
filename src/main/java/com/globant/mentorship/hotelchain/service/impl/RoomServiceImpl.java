@@ -3,14 +3,15 @@ package com.globant.mentorship.hotelchain.service.impl;
 import com.globant.mentorship.hotelchain.domain.contract.out.HotelSiteContract;
 import com.globant.mentorship.hotelchain.domain.contract.out.RoomContract;
 import com.globant.mentorship.hotelchain.domain.contract.out.RoomTypeContract;
-import com.globant.mentorship.hotelchain.domain.entity.HotelSiteEntity;
 import com.globant.mentorship.hotelchain.domain.entity.RoomEntity;
 import com.globant.mentorship.hotelchain.domain.entity.RoomTypeEntity;
 import com.globant.mentorship.hotelchain.exception.GenericServerError;
+import com.globant.mentorship.hotelchain.exception.RoomTypeNotFoundException;
 import com.globant.mentorship.hotelchain.mapper.HotelSiteMapper;
 import com.globant.mentorship.hotelchain.mapper.RoomMapper;
 import com.globant.mentorship.hotelchain.mapper.RoomTypeMapper;
 import com.globant.mentorship.hotelchain.repository.IRoomRepository;
+import com.globant.mentorship.hotelchain.repository.IRoomTypeRepository;
 import com.globant.mentorship.hotelchain.service.IRoomService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ import java.util.Map;
 public class RoomServiceImpl implements IRoomService {
 
     private final IRoomRepository roomRepository;
+    private final IRoomTypeRepository roomTypeRepository;
     private final RoomMapper roomMapper;
     private final HotelSiteMapper hotelSiteMapper;
     private final RoomTypeMapper roomTypeMapper;
@@ -35,15 +37,9 @@ public class RoomServiceImpl implements IRoomService {
         HotelSiteContract hotelSiteContract = (HotelSiteContract) mapContract.get("hotelSite");
         RoomTypeContract roomTypeContract = (RoomTypeContract) mapContract.get("roomType");
 
-        HotelSiteEntity hotelSiteEntity = hotelSiteMapper.loadEntityOut(hotelSiteContract);
-        hotelSiteEntity.setId(roomContract.getHotelSiteId());
-
-        RoomTypeEntity roomTypeEntity = roomTypeMapper.loadEntityOut(roomTypeContract);
-        roomTypeEntity.setId(roomContract.getRoomTypeId());
-
         RoomEntity roomEntity = roomMapper.loadEntityOut(roomContract);
-        roomEntity.setHotelSiteEntity(hotelSiteEntity);
-        roomEntity.setRoomTypeEntity(roomTypeEntity);
+        roomEntity.setHotelSiteEntity(hotelSiteMapper.loadEntityOut(hotelSiteContract));
+        roomEntity.setRoomTypeEntity(roomTypeMapper.loadEntityOut(roomTypeContract));
 
         try {
             roomRepository.save(roomEntity);
@@ -61,13 +57,28 @@ public class RoomServiceImpl implements IRoomService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public boolean validateIfRoomAlreadyExists(RoomContract roomContract) {
         return roomRepository.findByNumber(roomContract.getNumber()).isPresent();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public RoomEntity getRoom(int number) {
         return roomRepository.findByNumber(number).orElse(null);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public RoomTypeContract getRoomTypeMostBooked() {
+
+        Long roomTypeId = roomRepository.findTypeMostBooked()
+                .orElseThrow(() -> new RoomTypeNotFoundException("No type of rooms found"));
+
+        RoomTypeEntity roomTypeEntity = roomTypeRepository.findById(roomTypeId)
+                .orElseThrow(() -> new RoomTypeNotFoundException(String.format("Room type ID %d not found", roomTypeId)));
+
+        return roomTypeMapper.loadContractOut(roomTypeEntity);
     }
 
 }

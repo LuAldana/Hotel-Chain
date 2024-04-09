@@ -12,7 +12,6 @@ import java.util.List;
 public interface BookingMapper extends GenericMapperOut<BookingEntity, BookingContract> {
 
     @Override
-    @Mapping(target = "id", ignore = true)
     @Mapping(target = "roomEntity", ignore = true)
     @Mapping(target = "userEntity", ignore = true)
     BookingEntity loadEntityOut(BookingContract contractOut);

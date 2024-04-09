@@ -10,6 +10,7 @@ import com.globant.mentorship.hotelchain.mapper.HotelSiteMapper;
 import com.globant.mentorship.hotelchain.mapper.RoomMapper;
 import com.globant.mentorship.hotelchain.mapper.RoomTypeMapper;
 import com.globant.mentorship.hotelchain.repository.IRoomRepository;
+import com.globant.mentorship.hotelchain.repository.IRoomTypeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,6 +32,8 @@ class RoomServiceImplTest {
     RoomServiceImpl roomService;
     @Mock
     IRoomRepository roomRepository;
+    @Mock
+    IRoomTypeRepository roomTypeRepository;
     @Mock
     RoomMapper roomMapper;
     @Mock
@@ -122,6 +125,23 @@ class RoomServiceImplTest {
 
         // Then
         verify(roomRepository, times(1)).delete(any());
+    }
+
+    @Test
+    void getRoomTypeMostBookedSuccessfully() {
+
+        // Given
+        Long roomTypeId = 2L;
+        when(roomRepository.findTypeMostBooked()).thenReturn(Optional.of(roomTypeId));
+        when(roomTypeRepository.findById(anyLong())).thenReturn(Optional.of(RoomTypeEntity.builder().id(roomTypeId).build()));
+        when(roomTypeMapper.loadContractOut(any())).thenReturn(RoomTypeContract.builder().build());
+
+        // When
+        RoomTypeContract roomTypeContractFound = roomService.getRoomTypeMostBooked();
+
+        // Then
+        assertThat(roomTypeContractFound).isNotNull();
+
     }
 
 }

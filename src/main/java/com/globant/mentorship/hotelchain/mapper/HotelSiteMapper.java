@@ -12,7 +12,6 @@ import java.util.List;
 public interface HotelSiteMapper extends GenericMapperOut<HotelSiteEntity, HotelSiteContract> {
 
     @Override
-    @Mapping(target = "id", ignore = true)
     @Mapping(target = "cityEntity", ignore = true)
     @Mapping(target = "neighborhood", expression = "java(hotelSiteContract.getNeighborhood().toUpperCase())")
     HotelSiteEntity loadEntityOut(HotelSiteContract hotelSiteContract);
