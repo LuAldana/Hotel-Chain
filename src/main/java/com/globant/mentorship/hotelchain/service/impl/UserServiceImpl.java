@@ -5,7 +5,6 @@ import com.globant.mentorship.hotelchain.mapper.UserMapper;
 import com.globant.mentorship.hotelchain.repository.IUserRepository;
 import com.globant.mentorship.hotelchain.service.IUserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

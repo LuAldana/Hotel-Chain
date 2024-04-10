@@ -6,6 +6,7 @@ import com.globant.mentorship.hotelchain.repository.IRoomTypeRepository;
 import com.globant.mentorship.hotelchain.service.IRoomTypeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -15,6 +16,7 @@ public class RoomTypeServiceImpl implements IRoomTypeService {
     private final RoomTypeMapper roomTypeMapper;
 
     @Override
+    @Transactional(readOnly = true)
     public RoomTypeContract getRoomType(Long id) {
         return roomTypeMapper.loadContractOut(roomTypeRepository.findById(id).orElse(null));
     }

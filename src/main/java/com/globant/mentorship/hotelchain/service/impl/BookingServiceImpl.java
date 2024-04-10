@@ -6,6 +6,7 @@ import com.globant.mentorship.hotelchain.repository.IBookingRepository;
 import com.globant.mentorship.hotelchain.service.IBookingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -17,6 +18,7 @@ public class BookingServiceImpl implements IBookingService {
     private final BookingMapper bookingMapper;
 
     @Override
+    @Transactional(readOnly = true)
     public List<BookingContract> getAll() {
         return bookingMapper.loadContractsOut(bookingRepository.findAll());
     }

@@ -6,6 +6,7 @@ import com.globant.mentorship.hotelchain.repository.ICityRepository;
 import com.globant.mentorship.hotelchain.service.ICityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -14,6 +15,8 @@ public class CityServiceImpl implements ICityService {
     private final ICityRepository cityRepository;
     private final CityMapper cityMapper;
 
+    @Override
+    @Transactional(readOnly = true)
     public CityContract getCity(Long code) {
         return cityMapper.loadContractOut(cityRepository.findByCode(code).orElse(null));
     }
