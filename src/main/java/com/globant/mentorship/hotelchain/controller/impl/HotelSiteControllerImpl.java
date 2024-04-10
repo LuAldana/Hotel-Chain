@@ -32,9 +32,9 @@ public class HotelSiteControllerImpl implements IHotelSiteController {
     }
 
     @Override
-    public ResponseEntity<Void> deleteHotelSite(Long id) {
+    public ResponseEntity<Void> deleteHotelSite(String id) {
         hotelSiteValidator.deleteHotelSiteValidator(id);
-        hotelSiteService.deleteHotelSite(id);
+        hotelSiteService.deleteHotelSite(Long.valueOf(id));
         return ResponseEntity.noContent().build();
     }
 }

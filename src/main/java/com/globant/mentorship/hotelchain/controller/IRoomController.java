@@ -18,5 +18,5 @@ public interface IRoomController {
     ResponseEntity<RoomContract> createRoom(@Valid @RequestBody RoomContract roomContract);
 
     @DeleteMapping("/{numberRoom}")
-    ResponseEntity<Void> deleteRoom(@PathVariable int numberRoom);
+    ResponseEntity<Void> deleteRoom(@PathVariable String numberRoom);
 }

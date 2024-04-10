@@ -32,9 +32,9 @@ public class RoomControllerImpl implements IRoomController {
     }
 
     @Override
-    public ResponseEntity<Void> deleteRoom(int numberRoom) {
+    public ResponseEntity<Void> deleteRoom(String numberRoom) {
         roomValidator.deleteRoomValidator(numberRoom);
-        roomService.deleteRoom(numberRoom);
+        roomService.deleteRoom(Integer.parseInt(numberRoom));
         return ResponseEntity.noContent().build();
     }
 }

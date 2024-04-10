@@ -51,9 +51,9 @@ public class RoomServiceImpl implements IRoomService {
     }
 
     @Override
+    @Transactional
     public void deleteRoom(int numberRoom) {
-        RoomEntity roomEntity = getRoom(numberRoom);
-        roomRepository.delete(roomEntity);
+        roomRepository.deleteByNumber(numberRoom);
     }
 
     @Override
@@ -64,8 +64,8 @@ public class RoomServiceImpl implements IRoomService {
 
     @Override
     @Transactional(readOnly = true)
-    public RoomEntity getRoom(int number) {
-        return roomRepository.findByNumber(number).orElse(null);
+    public RoomContract getRoom(int number) {
+        return roomMapper.loadContractOut(roomRepository.findByNumber(number).orElse(null));
     }
 
     @Override

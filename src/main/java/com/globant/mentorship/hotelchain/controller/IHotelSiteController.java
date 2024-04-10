@@ -19,5 +19,5 @@ public interface IHotelSiteController {
     ResponseEntity<HotelSiteContract> createHotelSite(@Valid @RequestBody HotelSiteContract hotelSiteContract);
 
     @DeleteMapping("/{id}")
-    ResponseEntity<Void> deleteHotelSite(@PathVariable Long id);
+    ResponseEntity<Void> deleteHotelSite(@PathVariable String id);
 }

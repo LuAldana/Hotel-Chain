@@ -10,6 +10,4 @@ import java.util.Optional;
 public interface IHotelSiteRepository extends JpaRepository<HotelSiteEntity, Long> {
 
     Optional<HotelSiteEntity> findByNeighborhood(String neighborhood);
-
-    void deleteByNeighborhood(String neighborhood);
 }

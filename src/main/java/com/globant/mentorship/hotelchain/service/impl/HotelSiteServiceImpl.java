@@ -51,16 +51,17 @@ public class HotelSiteServiceImpl implements IHotelSiteService {
     @Override
     @Transactional
     public void deleteHotelSite(Long id) {
-        HotelSiteContract hotelSiteContract = getHotelSite(id);
-        hotelSiteRepository.deleteByNeighborhood(hotelSiteContract.getNeighborhood());
+        hotelSiteRepository.deleteById(id);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public HotelSiteContract getHotelSite(Long id) {
         return hotelSiteMapper.loadContractOut(hotelSiteRepository.findById(id).orElse(null));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public boolean validateIfHotelSiteAlreadyExists(HotelSiteContract hotelSiteContract) {
         return hotelSiteRepository.findByNeighborhood(hotelSiteContract.getNeighborhood()).isPresent();
     }

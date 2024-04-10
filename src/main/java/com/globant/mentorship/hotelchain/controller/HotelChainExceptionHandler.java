@@ -4,6 +4,7 @@ import com.globant.mentorship.hotelchain.domain.dto.ErrorDto;
 import com.globant.mentorship.hotelchain.exception.GenericServerError;
 import com.globant.mentorship.hotelchain.exception.base.EntityAlreadyExistsExceptionBase;
 import com.globant.mentorship.hotelchain.exception.base.EntityNotFoundExceptionBase;
+import com.globant.mentorship.hotelchain.exception.base.ValidatorExceptionBase;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +27,12 @@ public class HotelChainExceptionHandler  {
     public ResponseEntity<ErrorDto> EntityNotFoundExceptionBaseHandler(EntityNotFoundExceptionBase e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(createErrorDto(HttpStatus.NOT_FOUND, e));
+    }
+
+    @ExceptionHandler(ValidatorExceptionBase.class)
+    public ResponseEntity<ErrorDto> ValidatorExceptionBaseHandler(ValidatorExceptionBase e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(createErrorDto(HttpStatus.BAD_REQUEST, e));
     }
 
     @ExceptionHandler(GenericServerError.class)

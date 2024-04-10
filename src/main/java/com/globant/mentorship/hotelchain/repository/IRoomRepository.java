@@ -12,6 +12,8 @@ public interface IRoomRepository extends JpaRepository<RoomEntity, Long> {
 
     Optional<RoomEntity> findByNumber(int number);
 
+    void deleteByNumber(int number);
+
     @Query("SELECT r.roomTypeEntity.id " +
             "FROM RoomEntity r " +
             "WHERE r.status = 'RESERVADA' " +

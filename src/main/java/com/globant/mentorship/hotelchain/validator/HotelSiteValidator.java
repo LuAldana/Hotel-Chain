@@ -2,13 +2,12 @@ package com.globant.mentorship.hotelchain.validator;
 
 import com.globant.mentorship.hotelchain.domain.contract.out.CityContract;
 import com.globant.mentorship.hotelchain.domain.contract.out.HotelSiteContract;
-import com.globant.mentorship.hotelchain.exception.CityNotFoundException;
-import com.globant.mentorship.hotelchain.exception.HotelSiteAlreadyExistsException;
-import com.globant.mentorship.hotelchain.exception.HotelSiteNotFoundException;
+import com.globant.mentorship.hotelchain.exception.*;
 import com.globant.mentorship.hotelchain.service.ICityService;
 import com.globant.mentorship.hotelchain.service.IHotelSiteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,8 +38,12 @@ public class HotelSiteValidator {
         return mapContractValidated;
     }
 
-    public void deleteHotelSiteValidator(Long id) {
-        if(Objects.isNull(hotelSiteService.getHotelSite(id)))
+    public void deleteHotelSiteValidator(String id) {
+
+        if(!StringUtils.trimAllWhitespace(id).matches("\\d+"))
+            throw new HotelSiteValidatorException("Hotel site ID is not valid");
+
+        if(Objects.isNull(hotelSiteService.getHotelSite(Long.valueOf(id))))
             throw new HotelSiteNotFoundException(String.format("Hotel site ID %s not found", id));
     }
 }

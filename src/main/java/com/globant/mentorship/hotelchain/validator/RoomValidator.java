@@ -3,15 +3,13 @@ package com.globant.mentorship.hotelchain.validator;
 import com.globant.mentorship.hotelchain.domain.contract.out.HotelSiteContract;
 import com.globant.mentorship.hotelchain.domain.contract.out.RoomContract;
 import com.globant.mentorship.hotelchain.domain.contract.out.RoomTypeContract;
-import com.globant.mentorship.hotelchain.exception.HotelSiteNotFoundException;
-import com.globant.mentorship.hotelchain.exception.RoomAlreadyExistsException;
-import com.globant.mentorship.hotelchain.exception.RoomNotFoundException;
-import com.globant.mentorship.hotelchain.exception.RoomTypeNotFoundException;
+import com.globant.mentorship.hotelchain.exception.*;
 import com.globant.mentorship.hotelchain.service.IHotelSiteService;
 import com.globant.mentorship.hotelchain.service.IRoomService;
 import com.globant.mentorship.hotelchain.service.IRoomTypeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -49,8 +47,12 @@ public class RoomValidator {
         return mapContractValidated;
     }
 
-    public void deleteRoomValidator(int numberRoom) {
-        if(Objects.isNull(roomService.getRoom(numberRoom)))
-            throw new RoomNotFoundException(String.format("Room number %d not found", numberRoom));
+    public void deleteRoomValidator(String numberRoom) {
+
+        if(!StringUtils.trimAllWhitespace(numberRoom).matches("\\d+"))
+            throw new RoomValidatorException("Number room is not valid");
+
+        if(Objects.isNull(roomService.getRoom(Integer.parseInt(numberRoom))))
+            throw new RoomNotFoundException(String.format("Room number %s not found", numberRoom));
     }
 }

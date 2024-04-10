@@ -14,7 +14,7 @@ public interface IRoomService {
 
     boolean validateIfRoomAlreadyExists(RoomContract roomContract);
 
-    RoomEntity getRoom(int number);
+    RoomContract getRoom(int number);
 
     RoomTypeContract getRoomTypeMostBooked();
 }
