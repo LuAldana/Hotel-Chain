@@ -6,5 +6,7 @@ public interface IUserService {
 
     UserContract getUserByDocument(Long document);
 
+    UserContract getUserById(Long id);
+
     void blockGuest(Long document);
 }

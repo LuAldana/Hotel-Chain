@@ -64,8 +64,14 @@ public class RoomServiceImpl implements IRoomService {
 
     @Override
     @Transactional(readOnly = true)
-    public RoomContract getRoom(int number) {
+    public RoomContract getRoomByNumber(int number) {
         return roomMapper.loadContractOut(roomRepository.findByNumber(number).orElse(null));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public RoomContract getRoomById(Long id) {
+        return roomMapper.loadContractOut(roomRepository.findById(id).orElse(null));
     }
 
     @Override

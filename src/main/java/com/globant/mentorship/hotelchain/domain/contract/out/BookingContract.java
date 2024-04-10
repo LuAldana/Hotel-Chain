@@ -1,13 +1,13 @@
 package com.globant.mentorship.hotelchain.domain.contract.out;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
@@ -17,16 +17,21 @@ public class BookingContract {
 
     @JsonIgnore
     private Long id;
-    @NotEmpty(message = "The check in date can't be empty or null")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private String checkInDate;
-    @NotEmpty(message = "The check out date can't be empty or null")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private String checkOutDate;
-    @NotEmpty(message = "The check in date can't be empty or null")
-    private String status;
-    @Positive(message = "The room id must be greater than zero")
+
+    @NotNull(message = "Check In date can't be null")
+    @FutureOrPresent(message = "Check In date is not valid")
+    private LocalDate checkInDate;
+
+    @NotNull(message = "Check Out date can't be null")
+    @Future(message = "Check Out date is not valid")
+    private LocalDate checkOutDate;
+
+    @Builder.Default
+    private String status = "ACTIVA";
+
+    @Positive(message = "The room ID must be greater than zero")
     private Long roomId;
-    @Positive(message = "The user id must be greater than zero")
+
+    @Positive(message = "The user ID must be greater than zero")
     private Long userId;
 }

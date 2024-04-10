@@ -52,7 +52,7 @@ public class RoomValidator {
         if(!StringUtils.trimAllWhitespace(numberRoom).matches("\\d+"))
             throw new RoomValidatorException("Number room is not valid");
 
-        if(Objects.isNull(roomService.getRoom(Integer.parseInt(numberRoom))))
+        if(Objects.isNull(roomService.getRoomByNumber(Integer.parseInt(numberRoom))))
             throw new RoomNotFoundException(String.format("Room number %s not found", numberRoom));
     }
 }

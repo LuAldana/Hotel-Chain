@@ -22,6 +22,12 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public UserContract getUserById(Long id) {
+        return userMapper.loadContractOut(userRepository.findById(id).orElse(null));
+    }
+
+    @Override
     @Transactional
     public void blockGuest(Long document) {
         userRepository.blockGuest(document);

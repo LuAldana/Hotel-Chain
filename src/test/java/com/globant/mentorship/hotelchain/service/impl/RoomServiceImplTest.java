@@ -128,7 +128,7 @@ class RoomServiceImplTest {
     }
 
     @Test
-    void getRoomTypeMostBookedSuccessfully() {
+    void getRoomByNumberTypeMostBookedSuccessfully() {
 
         // Given
         Long roomTypeId = 2L;
