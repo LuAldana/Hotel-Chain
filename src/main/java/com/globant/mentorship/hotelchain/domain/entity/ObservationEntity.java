@@ -5,23 +5,28 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
 @Table(name = "tbl_observaciones")
 public class ObservationEntity {
+
     @Id
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(name = "tipo")
     private int type;
-    @Column(name = "observacion")
+
+    @Column(name = "observación")
     private String observation;
+
     @Column(name = "fecha")
-    private LocalDateTime date;
+    private LocalDateTime dateTime;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "tbl_reservas_id", referencedColumnName = "id")
     private BookingEntity bookingEntity;
