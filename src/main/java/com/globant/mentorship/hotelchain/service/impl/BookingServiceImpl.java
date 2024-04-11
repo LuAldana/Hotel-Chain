@@ -56,8 +56,8 @@ public class BookingServiceImpl implements IBookingService {
     @Override
     @Transactional(readOnly = true)
     public boolean validateIfBookingAlreadyExists(BookingContract bookingContract) {
-        return bookingRepository.existsByCheckInDateAndRoomIdAndUserId(bookingContract.getCheckInDate(),
-                bookingContract.getRoomId(), bookingContract.getUserId()).isPresent();
+        return bookingRepository.existsByCheckInDateAndRoomEntityIdAndUserEntityId(bookingContract.getCheckInDate(),
+                bookingContract.getRoomId(), bookingContract.getUserId());
 
     }
 }

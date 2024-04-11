@@ -15,20 +15,27 @@ public class RoomContract {
 
     @JsonIgnore
     private Long id;
+
     @NotNull(message = "Number room can't be null or empty")
     @Positive(message = "Number room must be greater than zero")
-    private int number;
+    private Integer number;
+
     @NotNull(message = "You must indicate whether or not the room has a private bathroom.")
     private boolean hasPrivateBath;
+
     @NotNull(message = "You must indicate whether or not the room has a phone")
     private boolean hasPhone;
+
     @NotNull(message = "You must indicate whether or not the room has a heating.")
     private boolean hasHeating;
+
     @NotEmpty(message = "Status room can't be null or empty")
     private String status;
+
     @NotNull(message = "Hotel site id mustn't be null or empty")
     @Positive(message = "Hotel site id must be greater than zero")
     private Long hotelSiteId;
+
     @NotNull(message = "Room type id mustn't be null or empty")
     @Positive(message = "Room type id  must be greater than zero")
     private Long roomTypeId;

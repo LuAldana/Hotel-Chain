@@ -18,11 +18,11 @@ public class BookingContract {
     @JsonIgnore
     private Long id;
 
-    @NotNull(message = "Check In date can't be null")
+    @NotNull(message = "Check In date can't be null or empty")
     @FutureOrPresent(message = "Check In date is not valid")
     private LocalDate checkInDate;
 
-    @NotNull(message = "Check Out date can't be null")
+    @NotNull(message = "Check Out date can't be null or empty")
     @Future(message = "Check Out date is not valid")
     private LocalDate checkOutDate;
 
@@ -30,8 +30,10 @@ public class BookingContract {
     private String status = "ACTIVA";
 
     @Positive(message = "The room ID must be greater than zero")
+    @NotNull(message = "Room ID can't be null")
     private Long roomId;
 
     @Positive(message = "The user ID must be greater than zero")
+    @NotNull(message = "Room ID date can't be null")
     private Long userId;
 }
