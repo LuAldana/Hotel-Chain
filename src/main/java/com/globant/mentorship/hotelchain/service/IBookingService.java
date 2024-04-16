@@ -19,4 +19,6 @@ public interface IBookingService {
     void cancelBooking(ObservationContract observationContract);
 
     boolean validateIfBookingAlreadyExists(BookingContract bookingContract);
+
+    Long getUserIdWithMostBookings();
 }

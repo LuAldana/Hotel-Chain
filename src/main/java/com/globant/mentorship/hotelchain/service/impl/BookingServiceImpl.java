@@ -8,6 +8,7 @@ import com.globant.mentorship.hotelchain.domain.entity.BookingEntity;
 import com.globant.mentorship.hotelchain.domain.entity.ObservationEntity;
 import com.globant.mentorship.hotelchain.domain.enumeration.BookingStatusEnum;
 import com.globant.mentorship.hotelchain.exception.GenericServerError;
+import com.globant.mentorship.hotelchain.exception.UserNotFoundException;
 import com.globant.mentorship.hotelchain.mapper.BookingMapper;
 import com.globant.mentorship.hotelchain.mapper.ObservationMapper;
 import com.globant.mentorship.hotelchain.mapper.RoomMapper;
@@ -21,6 +22,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -107,5 +109,11 @@ public class BookingServiceImpl implements IBookingService {
     public boolean validateIfBookingAlreadyExists(BookingContract bookingContract) {
         return bookingRepository.existsByCheckInDateAndRoomEntityIdAndUserEntityId(bookingContract.getCheckInDate(),
                 bookingContract.getRoomId(), bookingContract.getUserId());
+    }
+
+    @Override
+    public Long getUserIdWithMostBookings() {
+        return bookingRepository.findUserIdWithMostBookings(LocalDate.now().minusMonths(1))
+                .orElseThrow(() -> new UserNotFoundException("No user was found who has booked in the last month"));
     }
 }

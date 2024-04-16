@@ -17,4 +17,5 @@ public interface IUserRepository extends JpaRepository<UserEntity, Long> {
      @Modifying
      @Query("UPDATE UserEntity u SET u.status = true WHERE u.id = :userId")
      void blockGuest(@Param("userId") Long userId);
+
 }

@@ -3,15 +3,17 @@ package com.globant.mentorship.hotelchain.service.impl;
 import com.globant.mentorship.hotelchain.domain.contract.out.BookingContract;
 import com.globant.mentorship.hotelchain.domain.contract.out.ObservationContract;
 import com.globant.mentorship.hotelchain.domain.contract.out.UserContract;
+import com.globant.mentorship.hotelchain.domain.dto.UserBookingDto;
 import com.globant.mentorship.hotelchain.mapper.UserMapper;
 import com.globant.mentorship.hotelchain.repository.IUserRepository;
 import com.globant.mentorship.hotelchain.service.IBookingService;
 import com.globant.mentorship.hotelchain.service.IUserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.chrono.ChronoLocalDate;
 import java.util.List;
 import java.util.Objects;
 
@@ -47,5 +49,22 @@ public class UserServiceImpl implements IUserService {
                     .build()));
         }
         userRepository.blockGuest(userId);
+    }
+
+    @Override
+    public UserBookingDto getUserIdWithMostBookings() {
+
+        Long userId = bookingService.getUserIdWithMostBookings();
+        List<BookingContract> bookingContracts = bookingService.getBookingListByUserId(userId).stream()
+                .filter(b -> b.getCheckInDate().isAfter(LocalDate.now().minusMonths(1))).toList();
+        UserContract userContract = getUserById(userId);
+
+        return UserBookingDto.builder()
+                .document(userContract.getDocument())
+                .name(userContract.getName())
+                .firstLastName(userContract.getFirstLastName())
+                .secondLastName(userContract.getSecondLastName())
+                .numBookings(bookingContracts.size())
+                .build();
     }
 }

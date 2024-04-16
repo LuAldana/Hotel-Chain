@@ -4,7 +4,7 @@ import com.globant.mentorship.hotelchain.controller.IUserController;
 import com.globant.mentorship.hotelchain.controller.payload.BlockUserPayload;
 import com.globant.mentorship.hotelchain.controller.payload.ObservationPayload;
 import com.globant.mentorship.hotelchain.domain.contract.out.ObservationContract;
-import com.globant.mentorship.hotelchain.exception.UserValidatorException;
+import com.globant.mentorship.hotelchain.domain.dto.UserBookingDto;
 import com.globant.mentorship.hotelchain.initializer.ObservationInitializer;
 import com.globant.mentorship.hotelchain.service.IUserService;
 import com.globant.mentorship.hotelchain.validator.UserValidator;
@@ -37,5 +37,10 @@ public class UserControllerImpl implements IUserController {
         }
 
         return ResponseEntity.ok().build();
+    }
+
+    @Override
+    public ResponseEntity<UserBookingDto> getGuestWithMostBookings() {
+        return ResponseEntity.ok(userService.getUserIdWithMostBookings());
     }
 }
