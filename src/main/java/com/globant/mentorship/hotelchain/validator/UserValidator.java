@@ -1,13 +1,19 @@
 package com.globant.mentorship.hotelchain.validator;
 
+import com.globant.mentorship.hotelchain.controller.payload.BlockUserPayload;
+import com.globant.mentorship.hotelchain.controller.payload.ObservationPayload;
+import com.globant.mentorship.hotelchain.domain.contract.out.BookingContract;
+import com.globant.mentorship.hotelchain.domain.contract.out.ObservationContract;
 import com.globant.mentorship.hotelchain.domain.contract.out.UserContract;
 import com.globant.mentorship.hotelchain.exception.UserNotFoundException;
 import com.globant.mentorship.hotelchain.exception.UserValidatorException;
+import com.globant.mentorship.hotelchain.initializer.ObservationInitializer;
+import com.globant.mentorship.hotelchain.service.IBookingService;
 import com.globant.mentorship.hotelchain.service.IUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
+import java.util.List;
 import java.util.Objects;
 
 @RequiredArgsConstructor
@@ -15,18 +21,21 @@ import java.util.Objects;
 public class UserValidator {
 
     private final IUserService userService;
+    private final IBookingService bookingService;
 
-    public void blockGuestValidator(String document) {
+    public boolean blockGuestValidator(BlockUserPayload blockUserPayload) {
 
-        if(!StringUtils.trimAllWhitespace(String.valueOf(document)).matches("\\d+"))
-            throw new UserValidatorException("Document is not valid");
-
-        UserContract userContract = userService.getUserByDocument(Long.valueOf(document));
+        UserContract userContract = userService.getUserById(blockUserPayload.getUserId());
 
         if(Objects.isNull(userContract))
-            throw new UserNotFoundException(String.format("User document %s not found", document));
+            throw new UserNotFoundException(String.format("User ID %s not found", blockUserPayload.getUserId()));
 
         if(userContract.isStatus())
             throw new UserValidatorException("Guest is already blocked");
+
+        List<BookingContract> bookingContracts = bookingService.getBookingListByUserId(blockUserPayload.getUserId());
+
+        return Objects.nonNull(bookingContracts);
     }
+
 }

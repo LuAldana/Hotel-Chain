@@ -49,28 +49,8 @@ public class BookingServiceImpl implements IBookingService {
     }
 
     @Override
-    @Transactional
-    public BookingContract cancelBooking(Long bookingId, ObservationContract observationContract) {
-
-        BookingEntity bookingEntity = bookingRepository.findById(bookingId).get();
-        ObservationEntity observationEntity = observationMapper.loadEntityOut(observationContract);
-
-        bookingEntity.setStatus(BookingStatusEnum.CANCELLED.getDescription());
-        observationEntity.setBookingEntity(bookingEntity);
-
-        try {
-            bookingRepository.save(bookingEntity);
-            observationRepository.save(observationEntity);
-        } catch (DataAccessException e) {
-            log.error(e.getLocalizedMessage(), e.getCause());
-            throw new GenericServerError("Error when saving in the repository", e.getCause());
-
-        } catch (Exception e) {
-            log.error(e.getLocalizedMessage(), e.getCause());
-            throw new GenericServerError("Generic error", e.getCause());
-        }
-
-        return bookingMapper.loadContractOut(bookingEntity);
+    public List<BookingContract> getBookingListByUserId(Long userId) {
+        return bookingMapper.loadContractsOut(bookingRepository.findAllByUserEntityId(userId).orElse(null));
     }
 
     @Override
@@ -97,6 +77,29 @@ public class BookingServiceImpl implements IBookingService {
         }
 
         return bookingContract;
+    }
+
+    @Override
+    @Transactional
+    public void cancelBooking(ObservationContract observationContract) {
+
+        BookingEntity bookingEntity = bookingRepository.findById(observationContract.getBookingId()).get();
+        ObservationEntity observationEntity = observationMapper.loadEntityOut(observationContract);
+
+        bookingEntity.setStatus(BookingStatusEnum.CANCELLED.getDescription());
+        observationEntity.setBookingEntity(bookingEntity);
+
+        try {
+            bookingRepository.save(bookingEntity);
+            observationRepository.save(observationEntity);
+        } catch (DataAccessException e) {
+            log.error(e.getLocalizedMessage(), e.getCause());
+            throw new GenericServerError("Error when saving in the repository", e.getCause());
+
+        } catch (Exception e) {
+            log.error(e.getLocalizedMessage(), e.getCause());
+            throw new GenericServerError("Generic error", e.getCause());
+        }
     }
 
     @Override

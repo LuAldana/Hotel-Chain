@@ -15,6 +15,6 @@ public interface IUserRepository extends JpaRepository<UserEntity, Long> {
      Optional<UserEntity> findByDocument(Long document);
 
      @Modifying
-     @Query("UPDATE UserEntity u SET u.status = true WHERE u.document = :document")
-     void blockGuest(@Param("document") Long document);
+     @Query("UPDATE UserEntity u SET u.status = true WHERE u.id = :userId")
+     void blockGuest(@Param("userId") Long userId);
 }

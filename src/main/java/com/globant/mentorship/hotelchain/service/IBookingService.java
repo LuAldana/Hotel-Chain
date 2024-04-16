@@ -12,9 +12,11 @@ public interface IBookingService {
 
     BookingContract getBookingById(Long id);
 
-    BookingContract cancelBooking(Long bookingId, ObservationContract observationContract);
+    List<BookingContract> getBookingListByUserId(Long id);
 
     BookingContract createBooking(Map<String, Object> mapContractValidated);
+
+    void cancelBooking(ObservationContract observationContract);
 
     boolean validateIfBookingAlreadyExists(BookingContract bookingContract);
 }

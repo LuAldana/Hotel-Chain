@@ -39,6 +39,7 @@ public class BookingControllerImpl implements IBookingController {
     public ResponseEntity<BookingContract> cancelBooking(ObservationPayload payload) {
         bookingValidator.cancelBookingValidator(payload);
         ObservationContract observationContract = observationInitializer.init(payload);
-        return ResponseEntity.ok(bookingService.cancelBooking(payload.getBookingId(), observationContract));
+        bookingService.cancelBooking(observationContract);
+        return ResponseEntity.ok().build();
     }
 }
