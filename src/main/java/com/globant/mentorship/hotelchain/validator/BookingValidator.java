@@ -1,13 +1,16 @@
 package com.globant.mentorship.hotelchain.validator;
 
+import com.globant.mentorship.hotelchain.controller.payload.ObservationPayload;
 import com.globant.mentorship.hotelchain.domain.contract.out.BookingContract;
 import com.globant.mentorship.hotelchain.domain.contract.out.RoomContract;
+import com.globant.mentorship.hotelchain.domain.contract.out.RoomTypeContract;
 import com.globant.mentorship.hotelchain.domain.contract.out.UserContract;
-import com.globant.mentorship.hotelchain.exception.BookingAlreadyExistsException;
-import com.globant.mentorship.hotelchain.exception.RoomNotFoundException;
-import com.globant.mentorship.hotelchain.exception.UserNotFoundException;
+import com.globant.mentorship.hotelchain.domain.enumeration.BookingStatusEnum;
+import com.globant.mentorship.hotelchain.domain.enumeration.RoomTypeEnum;
+import com.globant.mentorship.hotelchain.exception.*;
 import com.globant.mentorship.hotelchain.service.IBookingService;
 import com.globant.mentorship.hotelchain.service.IRoomService;
+import com.globant.mentorship.hotelchain.service.IRoomTypeService;
 import com.globant.mentorship.hotelchain.service.IUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -23,6 +26,7 @@ public class BookingValidator {
     public final IBookingService bookingService;
     public final IRoomService roomService;
     private final IUserService userService;
+    private final IRoomTypeService roomTypeService;
 
     public Map<String, Object> createBookingValidator(BookingContract bookingContract) {
 
@@ -46,5 +50,25 @@ public class BookingValidator {
         mapContractValidated.put("booking", bookingContract);
 
         return mapContractValidated;
+    }
+
+    public void cancelBookingValidator(ObservationPayload observationPayload) {
+
+        BookingContract bookingContract = bookingService.getBookingById(observationPayload.getBookingId());
+
+        if(Objects.isNull(bookingContract))
+            throw new BookingNotFoundException(String.format("Booking ID %s not found", observationPayload.getBookingId()));
+
+        if(Objects.equals(bookingContract.getStatus(), BookingStatusEnum.CANCELLED.getDescription()))
+            throw new BookingValidatorException("Booking is already canceled");
+
+        if(Objects.equals(bookingContract.getStatus(), BookingStatusEnum.CHECK_OUT.getDescription()))
+            throw new BookingValidatorException("Booking must be active");
+
+        RoomContract roomContract = roomService.getRoomById(bookingContract.getRoomId());
+        RoomTypeContract roomTypeContract = roomTypeService.getRoomType(roomContract.getRoomTypeId());
+
+        if(roomTypeContract.getName().equals(RoomTypeEnum.SUITE.getType()))
+            throw new BookingValidatorException("This action is not available for Suite type rooms");
     }
 }
