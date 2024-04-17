@@ -29,6 +29,11 @@ public class BookingControllerImpl implements IBookingController {
     }
 
     @Override
+    public ResponseEntity<List<BookingContract>> getAllActiveBookings() {
+        return ResponseEntity.ok(bookingService.getAllActiveBookings());
+    }
+
+    @Override
     public ResponseEntity<BookingContract> createBooking(BookingContract bookingContract) {
         Map<String, Object> mapContractValidated = bookingValidator.createBookingValidator(bookingContract);
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -42,4 +47,6 @@ public class BookingControllerImpl implements IBookingController {
         bookingService.cancelBooking(observationContract);
         return ResponseEntity.ok().build();
     }
+
+
 }

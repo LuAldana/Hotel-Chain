@@ -10,6 +10,8 @@ public interface IBookingService {
 
     List<BookingContract> getAll();
 
+    List<BookingContract> getAllActiveBookings();
+
     BookingContract getBookingById(Long id);
 
     List<BookingContract> getBookingListByUserId(Long id);

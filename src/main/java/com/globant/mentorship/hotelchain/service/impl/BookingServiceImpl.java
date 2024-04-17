@@ -7,6 +7,7 @@ import com.globant.mentorship.hotelchain.domain.contract.out.UserContract;
 import com.globant.mentorship.hotelchain.domain.entity.BookingEntity;
 import com.globant.mentorship.hotelchain.domain.entity.ObservationEntity;
 import com.globant.mentorship.hotelchain.domain.enumeration.BookingStatusEnum;
+import com.globant.mentorship.hotelchain.exception.BookingNotFoundException;
 import com.globant.mentorship.hotelchain.exception.GenericServerError;
 import com.globant.mentorship.hotelchain.exception.UserNotFoundException;
 import com.globant.mentorship.hotelchain.mapper.BookingMapper;
@@ -42,6 +43,12 @@ public class BookingServiceImpl implements IBookingService {
     @Transactional(readOnly = true)
     public List<BookingContract> getAll() {
         return bookingMapper.loadContractsOut(bookingRepository.findAll());
+    }
+
+    @Override
+    public List<BookingContract> getAllActiveBookings() {
+        return bookingMapper.loadContractsOut(bookingRepository.findAllActive(BookingStatusEnum.ACTIVE.getDescription())
+                .orElseThrow(() -> new BookingNotFoundException("There is no active booking")));
     }
 
     @Override
