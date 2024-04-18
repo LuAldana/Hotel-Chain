@@ -57,7 +57,7 @@ public class BookingValidator {
         BookingContract bookingContract = bookingService.getBookingById(observationPayload.getBookingId());
 
         if(Objects.isNull(bookingContract))
-            throw new BookingNotFoundException(String.format("Booking ID %s not found", observationPayload.getBookingId()));
+            throw new BookingNotFoundException(String.format("Booking ID %d not found", observationPayload.getBookingId()));
 
         if(Objects.equals(bookingContract.getStatus(), BookingStatusEnum.CANCELLED.getDescription()))
             throw new BookingValidatorException("Booking is already canceled");
@@ -70,5 +70,18 @@ public class BookingValidator {
 
         if(roomTypeContract.getName().equals(RoomTypeEnum.SUITE.getType()))
             throw new BookingValidatorException("This action is not available for Suite type rooms");
+    }
+
+    public BookingContract getBookingTraceabilityValidator(Long bookingId) {
+
+        BookingContract bookingContract = bookingService.getBookingById(bookingId);
+
+        if(Objects.isNull(bookingContract))
+            throw new BookingNotFoundException(String.format("Booking ID %d not found", bookingId));
+
+        if(!bookingContract.getStatus().equals(BookingStatusEnum.ACTIVE.getDescription()))
+            throw new BookingValidatorException("Booking must be active");
+
+        return bookingContract;
     }
 }

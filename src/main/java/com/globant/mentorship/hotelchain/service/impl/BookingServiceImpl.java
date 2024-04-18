@@ -4,6 +4,7 @@ import com.globant.mentorship.hotelchain.domain.contract.out.BookingContract;
 import com.globant.mentorship.hotelchain.domain.contract.out.ObservationContract;
 import com.globant.mentorship.hotelchain.domain.contract.out.RoomContract;
 import com.globant.mentorship.hotelchain.domain.contract.out.UserContract;
+import com.globant.mentorship.hotelchain.domain.dto.BookingTraceability;
 import com.globant.mentorship.hotelchain.domain.entity.BookingEntity;
 import com.globant.mentorship.hotelchain.domain.entity.ObservationEntity;
 import com.globant.mentorship.hotelchain.domain.enumeration.BookingStatusEnum;
@@ -17,6 +18,7 @@ import com.globant.mentorship.hotelchain.mapper.UserMapper;
 import com.globant.mentorship.hotelchain.repository.IBookingRepository;
 import com.globant.mentorship.hotelchain.repository.IObservationRepository;
 import com.globant.mentorship.hotelchain.service.IBookingService;
+import com.globant.mentorship.hotelchain.service.IObservationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
@@ -38,6 +40,7 @@ public class BookingServiceImpl implements IBookingService {
     private final RoomMapper roomMapper;
     private final UserMapper userMapper;
     private final ObservationMapper observationMapper;
+    private final IObservationService observationService;
 
     @Override
     @Transactional(readOnly = true)
@@ -122,5 +125,16 @@ public class BookingServiceImpl implements IBookingService {
     public Long getUserIdWithMostBookings() {
         return bookingRepository.findUserIdWithMostBookings(LocalDate.now().minusMonths(1))
                 .orElseThrow(() -> new UserNotFoundException("No user was found who has booked in the last month"));
+    }
+
+    @Override
+    public BookingTraceability getBookingTraceability(BookingContract bookingContract) {
+
+        List<ObservationContract> observationContracts = observationService.getObservationListByBookinId(bookingContract.getId());
+
+        return BookingTraceability.builder()
+                .bookingContract(bookingContract)
+                .observations(observationContracts)
+                .build();
     }
 }

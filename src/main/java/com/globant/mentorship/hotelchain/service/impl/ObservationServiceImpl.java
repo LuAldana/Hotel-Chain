@@ -4,6 +4,7 @@ import com.globant.mentorship.hotelchain.domain.contract.out.BookingContract;
 import com.globant.mentorship.hotelchain.domain.contract.out.ObservationContract;
 import com.globant.mentorship.hotelchain.domain.entity.ObservationEntity;
 import com.globant.mentorship.hotelchain.exception.GenericServerError;
+import com.globant.mentorship.hotelchain.exception.ObservationNotFoundException;
 import com.globant.mentorship.hotelchain.mapper.BookingMapper;
 import com.globant.mentorship.hotelchain.mapper.ObservationMapper;
 import com.globant.mentorship.hotelchain.repository.IObservationRepository;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -45,5 +47,11 @@ public class ObservationServiceImpl implements IObservationService {
     @Transactional(readOnly = true)
     public boolean validateIfObservationAlreadyExists(ObservationContract observationContract) {
         return observationRepository.existsByTypeAndBookingEntityId(observationContract.getType(), observationContract.getBookingId());
+    }
+
+    @Override
+    public List<ObservationContract> getObservationListByBookinId(Long bookingId) {
+        return observationMapper.loadContractsOut(observationRepository.findAllByBookingEntityId(bookingId)
+                .orElseThrow(() -> new ObservationNotFoundException("The booking has no observations")));
     }
 }

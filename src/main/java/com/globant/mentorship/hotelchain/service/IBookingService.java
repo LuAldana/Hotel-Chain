@@ -2,6 +2,7 @@ package com.globant.mentorship.hotelchain.service;
 
 import com.globant.mentorship.hotelchain.domain.contract.out.BookingContract;
 import com.globant.mentorship.hotelchain.domain.contract.out.ObservationContract;
+import com.globant.mentorship.hotelchain.domain.dto.BookingTraceability;
 
 import java.util.List;
 import java.util.Map;
@@ -23,4 +24,6 @@ public interface IBookingService {
     boolean validateIfBookingAlreadyExists(BookingContract bookingContract);
 
     Long getUserIdWithMostBookings();
+
+    BookingTraceability getBookingTraceability(BookingContract bookingContract);
 }

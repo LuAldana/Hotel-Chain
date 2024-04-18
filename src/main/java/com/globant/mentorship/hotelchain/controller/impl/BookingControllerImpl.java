@@ -4,6 +4,7 @@ import com.globant.mentorship.hotelchain.controller.IBookingController;
 import com.globant.mentorship.hotelchain.controller.payload.ObservationPayload;
 import com.globant.mentorship.hotelchain.domain.contract.out.BookingContract;
 import com.globant.mentorship.hotelchain.domain.contract.out.ObservationContract;
+import com.globant.mentorship.hotelchain.domain.dto.BookingTraceability;
 import com.globant.mentorship.hotelchain.initializer.ObservationInitializer;
 import com.globant.mentorship.hotelchain.service.IBookingService;
 import com.globant.mentorship.hotelchain.validator.BookingValidator;
@@ -31,6 +32,12 @@ public class BookingControllerImpl implements IBookingController {
     @Override
     public ResponseEntity<List<BookingContract>> getAllActiveBookings() {
         return ResponseEntity.ok(bookingService.getAllActiveBookings());
+    }
+
+    @Override
+    public ResponseEntity<BookingTraceability> getBookingTraceability(Long bookingId) {
+        BookingContract bookingContractValidated = bookingValidator.getBookingTraceabilityValidator(bookingId);
+        return ResponseEntity.ok(bookingService.getBookingTraceability(bookingContractValidated));
     }
 
     @Override
