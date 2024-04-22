@@ -2,7 +2,7 @@ package com.globant.mentorship.hotelchain.service;
 
 import com.globant.mentorship.hotelchain.domain.contract.out.BookingContract;
 import com.globant.mentorship.hotelchain.domain.contract.out.ObservationContract;
-import com.globant.mentorship.hotelchain.domain.dto.BookingTraceability;
+import com.globant.mentorship.hotelchain.domain.dto.BookingTraceabilityResponse;
 
 import java.util.List;
 import java.util.Map;
@@ -25,5 +25,5 @@ public interface IBookingService {
 
     Long getUserIdWithMostBookings();
 
-    BookingTraceability getBookingTraceability(BookingContract bookingContract);
+    BookingTraceabilityResponse getBookingTraceability(BookingContract bookingContract);
 }

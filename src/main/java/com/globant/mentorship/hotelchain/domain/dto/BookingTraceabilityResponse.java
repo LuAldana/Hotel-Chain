@@ -9,7 +9,7 @@ import java.util.List;
 
 @Data
 @Builder
-public class BookingTraceability {
+public class BookingTraceabilityResponse {
 
     private BookingContract bookingContract;
     private List<ObservationContract> observations;

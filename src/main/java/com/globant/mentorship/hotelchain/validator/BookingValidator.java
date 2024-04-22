@@ -15,6 +15,7 @@ import com.globant.mentorship.hotelchain.service.IUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -69,7 +70,8 @@ public class BookingValidator {
         RoomTypeContract roomTypeContract = roomTypeService.getRoomType(roomContract.getRoomTypeId());
 
         if(roomTypeContract.getName().equals(RoomTypeEnum.SUITE.getType()))
-            throw new BookingValidatorException("This action is not available for Suite type rooms");
+            if(!LocalDate.now().isBefore(bookingContract.getCheckInDate().minusDays(2)))
+                throw new BookingValidatorException("Bookings for suite rooms must be cancelled two days prior to the check-in date");
     }
 
     public BookingContract getBookingTraceabilityValidator(Long bookingId) {

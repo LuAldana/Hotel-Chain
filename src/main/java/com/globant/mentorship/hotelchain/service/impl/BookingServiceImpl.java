@@ -4,7 +4,7 @@ import com.globant.mentorship.hotelchain.domain.contract.out.BookingContract;
 import com.globant.mentorship.hotelchain.domain.contract.out.ObservationContract;
 import com.globant.mentorship.hotelchain.domain.contract.out.RoomContract;
 import com.globant.mentorship.hotelchain.domain.contract.out.UserContract;
-import com.globant.mentorship.hotelchain.domain.dto.BookingTraceability;
+import com.globant.mentorship.hotelchain.domain.dto.BookingTraceabilityResponse;
 import com.globant.mentorship.hotelchain.domain.entity.BookingEntity;
 import com.globant.mentorship.hotelchain.domain.entity.ObservationEntity;
 import com.globant.mentorship.hotelchain.domain.enumeration.BookingStatusEnum;
@@ -128,11 +128,11 @@ public class BookingServiceImpl implements IBookingService {
     }
 
     @Override
-    public BookingTraceability getBookingTraceability(BookingContract bookingContract) {
+    public BookingTraceabilityResponse getBookingTraceability(BookingContract bookingContract) {
 
         List<ObservationContract> observationContracts = observationService.getObservationListByBookinId(bookingContract.getId());
 
-        return BookingTraceability.builder()
+        return BookingTraceabilityResponse.builder()
                 .bookingContract(bookingContract)
                 .observations(observationContracts)
                 .build();
