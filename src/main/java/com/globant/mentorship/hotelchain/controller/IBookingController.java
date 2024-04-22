@@ -17,6 +17,9 @@ public interface IBookingController {
     @GetMapping
     ResponseEntity<List<BookingContract>> getAll();
 
+    @GetMapping("/by-user")
+    ResponseEntity<List<BookingContract>> getAllGuestBookings(@RequestParam("id") Long id);
+
     @GetMapping("/actives")
     ResponseEntity<List<BookingContract>> getAllActiveBookings();
 

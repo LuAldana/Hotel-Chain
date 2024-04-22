@@ -30,6 +30,11 @@ public class BookingControllerImpl implements IBookingController {
     }
 
     @Override
+    public ResponseEntity<List<BookingContract>> getAllGuestBookings(Long userId) {
+        return ResponseEntity.ok(bookingService.getBookingListByUserId(userId));
+    }
+
+    @Override
     public ResponseEntity<List<BookingContract>> getAllActiveBookings() {
         return ResponseEntity.ok(bookingService.getAllActiveBookings());
     }
