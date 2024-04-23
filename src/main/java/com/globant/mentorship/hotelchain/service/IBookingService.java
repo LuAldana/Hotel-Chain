@@ -1,8 +1,9 @@
 package com.globant.mentorship.hotelchain.service;
 
+import com.globant.mentorship.hotelchain.controller.payload.BookingPayload;
 import com.globant.mentorship.hotelchain.domain.contract.out.BookingContract;
 import com.globant.mentorship.hotelchain.domain.contract.out.ObservationContract;
-import com.globant.mentorship.hotelchain.domain.dto.BookingTraceabilityResponse;
+import com.globant.mentorship.hotelchain.domain.response.BookingTraceabilityResponse;
 
 import java.util.List;
 import java.util.Map;
@@ -21,7 +22,7 @@ public interface IBookingService {
 
     void cancelBooking(ObservationContract observationContract);
 
-    boolean validateIfBookingAlreadyExists(BookingContract bookingContract);
+    boolean validateIfBookingAlreadyExists(BookingPayload bookingPayload);
 
     Long getUserIdWithMostBookings();
 

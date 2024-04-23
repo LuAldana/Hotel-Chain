@@ -1,10 +1,12 @@
 package com.globant.mentorship.hotelchain.controller.impl;
 
 import com.globant.mentorship.hotelchain.controller.IBookingController;
+import com.globant.mentorship.hotelchain.controller.payload.BookingPayload;
 import com.globant.mentorship.hotelchain.controller.payload.ObservationPayload;
 import com.globant.mentorship.hotelchain.domain.contract.out.BookingContract;
 import com.globant.mentorship.hotelchain.domain.contract.out.ObservationContract;
-import com.globant.mentorship.hotelchain.domain.dto.BookingTraceabilityResponse;
+import com.globant.mentorship.hotelchain.domain.response.BookingTraceabilityResponse;
+import com.globant.mentorship.hotelchain.initializer.BookingInitializer;
 import com.globant.mentorship.hotelchain.initializer.ObservationInitializer;
 import com.globant.mentorship.hotelchain.service.IBookingService;
 import com.globant.mentorship.hotelchain.validator.BookingValidator;
@@ -22,6 +24,7 @@ public class BookingControllerImpl implements IBookingController {
 
     private final IBookingService bookingService;
     private final BookingValidator bookingValidator;
+    private final BookingInitializer bookingInitializer;
     private final ObservationInitializer observationInitializer;
 
     @Override
@@ -46,8 +49,10 @@ public class BookingControllerImpl implements IBookingController {
     }
 
     @Override
-    public ResponseEntity<BookingContract> createBooking(BookingContract bookingContract) {
-        Map<String, Object> mapContractValidated = bookingValidator.createBookingValidator(bookingContract);
+    public ResponseEntity<BookingContract> createBooking(BookingPayload bookingPayload) {
+        Map<String, Object> mapContractValidated = bookingValidator.createBookingValidator(bookingPayload);
+        BookingContract bookingContract = bookingInitializer.init(bookingPayload);
+        mapContractValidated.put("booking", bookingContract);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(bookingService.createBooking(mapContractValidated));
     }

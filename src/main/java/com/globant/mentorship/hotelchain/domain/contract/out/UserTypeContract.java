@@ -2,8 +2,7 @@ package com.globant.mentorship.hotelchain.domain.contract.out;
 
 import lombok.*;
 
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder

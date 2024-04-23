@@ -1,6 +1,7 @@
 package com.globant.mentorship.hotelchain.domain.contract.out;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.globant.mentorship.hotelchain.domain.enumeration.BookingStatusEnum;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,12 +23,10 @@ public class BookingContract {
     @FutureOrPresent(message = "Check In date is not valid")
     private LocalDate checkInDate;
 
-    @NotNull(message = "Check Out date can't be null or empty")
-    @Future(message = "Check Out date is not valid")
     private LocalDate checkOutDate;
 
     @Builder.Default
-    private String status = "ACTIVA";
+    private String status = BookingStatusEnum.ACTIVE.getDescription();
 
     @Positive(message = "The room ID must be greater than zero")
     @NotNull(message = "Room ID can't be null")

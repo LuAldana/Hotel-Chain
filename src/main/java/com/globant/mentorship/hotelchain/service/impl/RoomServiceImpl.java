@@ -15,7 +15,6 @@ import com.globant.mentorship.hotelchain.repository.IRoomRepository;
 import com.globant.mentorship.hotelchain.repository.IRoomTypeRepository;
 import com.globant.mentorship.hotelchain.service.IRoomService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;

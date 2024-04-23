@@ -10,14 +10,17 @@ import com.globant.mentorship.hotelchain.mapper.ObservationMapper;
 import com.globant.mentorship.hotelchain.repository.IObservationRepository;
 import com.globant.mentorship.hotelchain.service.IObservationService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
 
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
+@Log4j2
 public class ObservationServiceImpl implements IObservationService {
 
     private final IObservationRepository observationRepository;
@@ -36,8 +39,13 @@ public class ObservationServiceImpl implements IObservationService {
 
         try {
             observationRepository.save(observationEntity);
+        } catch (DataAccessException e) {
+            log.error(e.getLocalizedMessage(), e.getCause());
+            throw new GenericServerError("Error when saving in the repository", e.getCause());
+
         } catch (Exception e) {
-             throw new GenericServerError(e.getLocalizedMessage(), e.getCause());
+            log.error(e.getLocalizedMessage(), e.getCause());
+            throw new GenericServerError("Generic error", e.getCause());
         }
 
         return observationContract;

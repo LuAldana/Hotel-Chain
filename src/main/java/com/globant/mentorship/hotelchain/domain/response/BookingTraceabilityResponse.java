@@ -1,4 +1,4 @@
-package com.globant.mentorship.hotelchain.domain.dto;
+package com.globant.mentorship.hotelchain.domain.response;
 
 import com.globant.mentorship.hotelchain.domain.contract.out.BookingContract;
 import com.globant.mentorship.hotelchain.domain.contract.out.ObservationContract;

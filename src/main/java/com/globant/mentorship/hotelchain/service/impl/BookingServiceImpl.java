@@ -1,10 +1,11 @@
 package com.globant.mentorship.hotelchain.service.impl;
 
+import com.globant.mentorship.hotelchain.controller.payload.BookingPayload;
 import com.globant.mentorship.hotelchain.domain.contract.out.BookingContract;
 import com.globant.mentorship.hotelchain.domain.contract.out.ObservationContract;
 import com.globant.mentorship.hotelchain.domain.contract.out.RoomContract;
 import com.globant.mentorship.hotelchain.domain.contract.out.UserContract;
-import com.globant.mentorship.hotelchain.domain.dto.BookingTraceabilityResponse;
+import com.globant.mentorship.hotelchain.domain.response.BookingTraceabilityResponse;
 import com.globant.mentorship.hotelchain.domain.entity.BookingEntity;
 import com.globant.mentorship.hotelchain.domain.entity.ObservationEntity;
 import com.globant.mentorship.hotelchain.domain.enumeration.BookingStatusEnum;
@@ -63,6 +64,7 @@ public class BookingServiceImpl implements IBookingService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<BookingContract> getBookingListByUserId(Long userId) {
         return bookingMapper.loadContractsOut(bookingRepository.findAllByUserEntityId(userId).orElse(null));
     }
@@ -121,18 +123,20 @@ public class BookingServiceImpl implements IBookingService {
 
     @Override
     @Transactional(readOnly = true)
-    public boolean validateIfBookingAlreadyExists(BookingContract bookingContract) {
-        return bookingRepository.existsByCheckInDateAndRoomEntityIdAndUserEntityId(bookingContract.getCheckInDate(),
-                bookingContract.getRoomId(), bookingContract.getUserId());
+    public boolean validateIfBookingAlreadyExists(BookingPayload bookingPayload) {
+        return bookingRepository.existsByCheckInDateAndRoomEntityIdAndUserEntityId(bookingPayload.getCheckInDate(),
+                bookingPayload.getRoomId(), bookingPayload.getUserId());
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Long getUserIdWithMostBookings() {
         return bookingRepository.findUserIdWithMostBookings(LocalDate.now().minusMonths(1))
                 .orElseThrow(() -> new UserNotFoundException("No user was found who has booked in the last month"));
     }
 
     @Override
+    @Transactional(readOnly = true)
     public BookingTraceabilityResponse getBookingTraceability(BookingContract bookingContract) {
 
         List<ObservationContract> observationContracts = observationService.getObservationListByBookinId(bookingContract.getId());

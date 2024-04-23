@@ -1,5 +1,6 @@
 package com.globant.mentorship.hotelchain.validator;
 
+import com.globant.mentorship.hotelchain.controller.payload.BookingPayload;
 import com.globant.mentorship.hotelchain.controller.payload.ObservationPayload;
 import com.globant.mentorship.hotelchain.domain.contract.out.BookingContract;
 import com.globant.mentorship.hotelchain.domain.contract.out.RoomContract;
@@ -30,32 +31,31 @@ public class BookingValidator {
     private final IUserService userService;
     private final IRoomTypeService roomTypeService;
 
-    public Map<String, Object> createBookingValidator(BookingContract bookingContract) {
+    public Map<String, Object> createBookingValidator(BookingPayload bookingPayload) {
 
         Map<String, Object> mapContractValidated = new HashMap<>();
 
-        RoomContract roomContract = roomService.getRoomById(bookingContract.getRoomId());
+        RoomContract roomContract = roomService.getRoomById(bookingPayload.getRoomId());
 
         if(Objects.isNull(roomContract))
-            throw new RoomNotFoundException(String.format("Room ID %d not found", bookingContract.getRoomId()));
+            throw new RoomNotFoundException(String.format("Room ID %d not found", bookingPayload.getRoomId()));
 
         if(roomContract.getStatus().equals(RoomStatusEnum.BOOKED.getDescription()))
             throw new BookingValidatorException("Room is booked");
 
-        UserContract userContract = userService.getUserById(bookingContract.getUserId());
+        UserContract userContract = userService.getUserById(bookingPayload.getUserId());
 
         if(Objects.isNull(userContract))
-            throw new UserNotFoundException(String.format("User ID %d not found", bookingContract.getUserId()));
+            throw new UserNotFoundException(String.format("User ID %d not found", bookingPayload.getUserId()));
 
         if(!userContract.isStatus())
             throw new BookingValidatorException("User is blocked");
 
-        if(bookingService.validateIfBookingAlreadyExists(bookingContract))
+        if(bookingService.validateIfBookingAlreadyExists(bookingPayload))
             throw new BookingAlreadyExistsException(("Booking already exists for this guest"));
 
         mapContractValidated.put("room", roomContract);
         mapContractValidated.put("user", userContract);
-        mapContractValidated.put("booking", bookingContract);
 
         return mapContractValidated;
     }

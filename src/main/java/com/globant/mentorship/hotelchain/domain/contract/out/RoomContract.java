@@ -1,6 +1,7 @@
 package com.globant.mentorship.hotelchain.domain.contract.out;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.globant.mentorship.hotelchain.domain.enumeration.RoomStatusEnum;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,8 +30,8 @@ public class RoomContract {
     @NotNull(message = "You must indicate whether or not the room has a heating.")
     private boolean hasHeating;
 
-    @NotEmpty(message = "Status room can't be null or empty")
-    private String status;
+    @Builder.Default
+    private String status = RoomStatusEnum.AVAILABLE.getDescription();
 
     @NotNull(message = "Hotel site id mustn't be null or empty")
     @Positive(message = "Hotel site id must be greater than zero")
