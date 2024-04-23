@@ -18,4 +18,8 @@ public interface IRoomService {
     RoomContract getRoomById(Long id);
 
     RoomTypeContract getRoomTypeMostBooked();
+
+    void setStatusToBooked(Long roomId);
+
+    void setStatusToAvailable(Long roomId);
 }

@@ -6,6 +6,7 @@ import com.globant.mentorship.hotelchain.domain.contract.out.RoomContract;
 import com.globant.mentorship.hotelchain.domain.contract.out.RoomTypeContract;
 import com.globant.mentorship.hotelchain.domain.contract.out.UserContract;
 import com.globant.mentorship.hotelchain.domain.enumeration.BookingStatusEnum;
+import com.globant.mentorship.hotelchain.domain.enumeration.RoomStatusEnum;
 import com.globant.mentorship.hotelchain.domain.enumeration.RoomTypeEnum;
 import com.globant.mentorship.hotelchain.exception.*;
 import com.globant.mentorship.hotelchain.service.IBookingService;
@@ -38,10 +39,16 @@ public class BookingValidator {
         if(Objects.isNull(roomContract))
             throw new RoomNotFoundException(String.format("Room ID %d not found", bookingContract.getRoomId()));
 
+        if(roomContract.getStatus().equals(RoomStatusEnum.BOOKED.getDescription()))
+            throw new BookingValidatorException("Room is booked");
+
         UserContract userContract = userService.getUserById(bookingContract.getUserId());
 
         if(Objects.isNull(userContract))
             throw new UserNotFoundException(String.format("User ID %d not found", bookingContract.getUserId()));
+
+        if(!userContract.isStatus())
+            throw new BookingValidatorException("User is blocked");
 
         if(bookingService.validateIfBookingAlreadyExists(bookingContract))
             throw new BookingAlreadyExistsException(("Booking already exists for this guest"));

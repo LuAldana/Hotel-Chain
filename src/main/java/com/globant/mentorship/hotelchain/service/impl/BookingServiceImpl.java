@@ -19,6 +19,7 @@ import com.globant.mentorship.hotelchain.repository.IBookingRepository;
 import com.globant.mentorship.hotelchain.repository.IObservationRepository;
 import com.globant.mentorship.hotelchain.service.IBookingService;
 import com.globant.mentorship.hotelchain.service.IObservationService;
+import com.globant.mentorship.hotelchain.service.IRoomService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
@@ -41,6 +42,7 @@ public class BookingServiceImpl implements IBookingService {
     private final UserMapper userMapper;
     private final ObservationMapper observationMapper;
     private final IObservationService observationService;
+    private final IRoomService roomService;
 
     @Override
     @Transactional(readOnly = true)
@@ -74,6 +76,8 @@ public class BookingServiceImpl implements IBookingService {
         UserContract userContract = (UserContract) mapContractValidated.get("user");
 
         BookingEntity bookingEntity = bookingMapper.loadEntityOut(bookingContract);
+
+        roomService.setStatusToBooked(roomContract.getId());
         bookingEntity.setRoomEntity(roomMapper.loadEntityOut(roomContract));
         bookingEntity.setUserEntity(userMapper.loadEntityOut(userContract));
 
@@ -98,6 +102,7 @@ public class BookingServiceImpl implements IBookingService {
         BookingEntity bookingEntity = bookingRepository.findById(observationContract.getBookingId()).get();
         ObservationEntity observationEntity = observationMapper.loadEntityOut(observationContract);
 
+        roomService.setStatusToAvailable(bookingEntity.getRoomEntity().getId());
         bookingEntity.setStatus(BookingStatusEnum.CANCELLED.getDescription());
         observationEntity.setBookingEntity(bookingEntity);
 

@@ -5,6 +5,7 @@ import com.globant.mentorship.hotelchain.domain.contract.out.RoomContract;
 import com.globant.mentorship.hotelchain.domain.contract.out.RoomTypeContract;
 import com.globant.mentorship.hotelchain.domain.entity.RoomEntity;
 import com.globant.mentorship.hotelchain.domain.entity.RoomTypeEntity;
+import com.globant.mentorship.hotelchain.domain.enumeration.RoomStatusEnum;
 import com.globant.mentorship.hotelchain.exception.GenericServerError;
 import com.globant.mentorship.hotelchain.exception.RoomTypeNotFoundException;
 import com.globant.mentorship.hotelchain.mapper.HotelSiteMapper;
@@ -14,12 +15,16 @@ import com.globant.mentorship.hotelchain.repository.IRoomRepository;
 import com.globant.mentorship.hotelchain.repository.IRoomTypeRepository;
 import com.globant.mentorship.hotelchain.service.IRoomService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
 
 @Service
+@Log4j2
 @RequiredArgsConstructor
 public class RoomServiceImpl implements IRoomService {
 
@@ -43,8 +48,13 @@ public class RoomServiceImpl implements IRoomService {
 
         try {
             roomRepository.save(roomEntity);
+        } catch (DataAccessException e) {
+            log.error(e.getLocalizedMessage(), e.getCause());
+            throw new GenericServerError("Error when saving in the repository", e.getCause());
+
         } catch (Exception e) {
-            throw new GenericServerError(e.getLocalizedMessage(), e.getCause());
+            log.error(e.getLocalizedMessage(), e.getCause());
+            throw new GenericServerError("Generic error", e.getCause());
         }
 
         return roomContract;
@@ -85,6 +95,42 @@ public class RoomServiceImpl implements IRoomService {
                 .orElseThrow(() -> new RoomTypeNotFoundException(String.format("Room type ID %d not found", roomTypeId)));
 
         return roomTypeMapper.loadContractOut(roomTypeEntity);
+    }
+
+    @Override
+    public void setStatusToBooked(Long roomId) {
+
+        RoomEntity roomEntity = roomRepository.findById(roomId).get();
+        roomEntity.setStatus(RoomStatusEnum.BOOKED.getDescription());
+
+        try {
+            roomRepository.save(roomEntity);
+        } catch (DataAccessException e) {
+            log.error(e.getLocalizedMessage(), e.getCause());
+            throw new GenericServerError("Error when saving in the repository", e.getCause());
+
+        } catch (Exception e) {
+            log.error(e.getLocalizedMessage(), e.getCause());
+            throw new GenericServerError("Generic error", e.getCause());
+        }
+
+    }
+
+    @Override
+    public void setStatusToAvailable(Long roomId) {
+        RoomEntity roomEntity = roomRepository.findById(roomId).get();
+        roomEntity.setStatus(RoomStatusEnum.AVAILABLE.getDescription());
+
+        try {
+            roomRepository.save(roomEntity);
+        } catch (DataAccessException e) {
+            log.error(e.getLocalizedMessage(), e.getCause());
+            throw new GenericServerError("Error when saving in the repository", e.getCause());
+
+        } catch (Exception e) {
+            log.error(e.getLocalizedMessage(), e.getCause());
+            throw new GenericServerError("Generic error", e.getCause());
+        }
     }
 
 }

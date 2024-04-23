@@ -1,13 +1,10 @@
 package com.globant.mentorship.hotelchain.validator;
 
 import com.globant.mentorship.hotelchain.controller.payload.BlockUserPayload;
-import com.globant.mentorship.hotelchain.controller.payload.ObservationPayload;
 import com.globant.mentorship.hotelchain.domain.contract.out.BookingContract;
-import com.globant.mentorship.hotelchain.domain.contract.out.ObservationContract;
 import com.globant.mentorship.hotelchain.domain.contract.out.UserContract;
 import com.globant.mentorship.hotelchain.exception.UserNotFoundException;
 import com.globant.mentorship.hotelchain.exception.UserValidatorException;
-import com.globant.mentorship.hotelchain.initializer.ObservationInitializer;
 import com.globant.mentorship.hotelchain.service.IBookingService;
 import com.globant.mentorship.hotelchain.service.IUserService;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +27,7 @@ public class UserValidator {
         if(Objects.isNull(userContract))
             throw new UserNotFoundException(String.format("User ID %s not found", blockUserPayload.getUserId()));
 
-        if(userContract.isStatus())
+        if(!userContract.isStatus())
             throw new UserValidatorException("Guest is already blocked");
 
         List<BookingContract> bookingContracts = bookingService.getBookingListByUserId(blockUserPayload.getUserId());
